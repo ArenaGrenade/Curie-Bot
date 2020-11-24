@@ -16,6 +16,7 @@ load_dotenv()
 
 # OpenAI Creds
 openai.api_key = os.environ.get('OPENAI_KEY')
+print("Connected to OpenAI API")
 
 # Telegram Creds
 http_request_url = "https://api.telegram.org/bot" + os.environ.get('TG_BOT_KEY')
@@ -26,8 +27,10 @@ queue_lock = threading.Lock()
 workQueue = queue.Queue(30)
 threads = []
 
-threads.append(threading.Thread(target=converse, args=[workQueue, queue_lock, http_request_url]))
 threads.append(threading.Thread(target=pollThread, args=[workQueue, queue_lock, http_request_url]))
+print("Created polling thread")
+threads.append(threading.Thread(target=converse, args=[workQueue, queue_lock, http_request_url]))
+print("Created Conversation thread")
 
 threads[0].start()
 threads[1].start()
